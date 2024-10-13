@@ -1,3 +1,16 @@
+# Messenger App
+
+Inertia, react, reverb
+
+## Broadcasting
+
+```bash
+    php artisan install:broadcasting
+
+    # yes for reverb
+    # yes for node dependencies
+```
+
 ## Packages
 
 [Headlessui](https://headlessui.com/)
