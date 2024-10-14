@@ -53,10 +53,21 @@ class DatabaseSeeder extends Seeder
             ->get();
 
         $conversations = $messagesNotInGroup->groupBy(function ($message) {
+            // create a string as identifier of conversation
+            // and add the messages between these 2 users as messages in the conversation
+            // so this will return an array of messages with the identifier as key
+            // It doesn't matter if messages is from id 1 to id 2 or from id 2 to id 1
+            // it will be included in the array returned from the groupBy with identifier 1_2
             return collect([$message->sender_id, $message->receiver_id])
                 ->sort()
                 ->implode('_');
-        })->map(function ($groupedMessages) {
+
+        })->map(function ($groupedMessages): array {
+            // here each conversation may have multiple messages
+            // for a conversation we just need the initiator's id from sender_id from the first message to be user_id1
+            // and also the receiver would be user_id2 from the first message
+            // the last_message_id would be the last element in the array of conversation's messages
+
             return [
                 'user_id1' => $groupedMessages->first()->sender_id,
                 'user_id2' => $groupedMessages->first()->receiver_id,
@@ -64,6 +75,7 @@ class DatabaseSeeder extends Seeder
                 'created_at' => new Carbon,
                 'updated_at' => new Carbon,
             ];
+
         })->values();
 
         Conversation::insertOrIgnore($conversations->toArray());
@@ -86,12 +98,16 @@ class DatabaseSeeder extends Seeder
 // so we group them together to create the conversation
 
 // [
+// conversation 1
 //     1-2 => [
+// messages in conversation 1
 //         [1,2],
-//         [2,1],
+//         [2,1], // the sort() on groupBy will prevent creating another conversation and this would be conversation 1-2
 //         [1,2]
 //     ],
+// second conversation
 //     1-3 => [
+// messages in conversation 2
 //         [1,3]
 //     ]
 // ]
