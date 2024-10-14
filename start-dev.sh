@@ -15,11 +15,11 @@ tmux send-keys -t lara:0.0 'php artisan serve' C-m
 # Start the Laravel queue worker in the second pane
 tmux send-keys -t lara:0.1 'php artisan queue:work' C-m
 
-# Start the Ollama server in the third pane
+# Start the Vite asset bundling in the third pane
 tmux send-keys -t lara:0.2 'yarn dev' C-m
 
-# Start the Vite asset bundling in the fourth pane
-tmux send-keys -t lara:0.3 'git status' C-m
+# Start Laravel Reverb server in the fourth pane
+tmux send-keys -t lara:0.3 'php artisan reverb:start --debug' C-m
 
 # Attach to the tmux session
 tmux attach -t lara
